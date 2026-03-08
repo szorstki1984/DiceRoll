@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "D10 Dice Roller",
+  "version": "1.0.0",
+  "description": "Roll d10 dice with normal (white) and hunger (red) dice pools",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": []
+}

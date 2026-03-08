@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>D10 Dice Roller</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎲 D10 Dice Roller</h1>
+
+      <div class="controls">
+        <div class="dice-selector">
+          <label for="normalDice">
+            <span class="label-text">Białe kości:</span>
+            <div class="counter-controls">
+              <button class="btn-counter" id="decreaseNormal">-</button>
+              <input type="number" id="normalDice" min="0" max="20" value="5" />
+              <button class="btn-counter" id="increaseNormal">+</button>
+            </div>
+          </label>
+        </div>
+
+        <div class="dice-selector">
+          <label for="hungerDice">
+            <span class="label-text">Czerwone kości (głód):</span>
+            <div class="counter-controls">
+              <button class="btn-counter" id="decreaseHunger">-</button>
+              <input type="number" id="hungerDice" min="0" max="20" value="2" />
+              <button class="btn-counter" id="increaseHunger">+</button>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <button id="rollButton" class="roll-button">RZUĆ KOŚĆMI</button>
+
+      <div id="results" class="results">
+        <div class="dice-section">
+          <h3>Białe kości:</h3>
+          <div id="normalResults" class="dice-container"></div>
+        </div>
+
+        <div class="dice-section">
+          <h3>Czerwone kości (głód):</h3>
+          <div id="hungerResults" class="dice-container"></div>
+        </div>
+      </div>
+
+      <div id="summary" class="summary"></div>
+    </div>
+
+    <script type="module" src="dist/popup.js"></script>
+  </body>
+</html>

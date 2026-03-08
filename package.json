@@ -1,0 +1,13 @@
+{
+  "name": "d10-dice-roller",
+  "version": "1.0.0",
+  "description": "Chrome extension for rolling d10 dice",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.268",
+    "typescript": "^5.4.0"
+  }
+}
