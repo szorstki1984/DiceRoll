@@ -13,6 +13,15 @@ Rozszerzenie Chrome do rzucania dziesięciościennymi kośćmi (d10) z podziałe
 - 📤 **Integracja z Discord** - wysyłaj wyniki na kanał Discord przez webhook
 - 💾 Automatyczne zapisywanie konfiguracji Discord
 
+## Pobieranie
+
+Możesz pobrać rozszerzenie w jednej z poniższych metod:
+
+- **ZIP z repozytorium**: [Pobierz ZIP](https://github.com/TwojaNazwaUzytkownika/Roll/archive/refs/heads/main.zip) lub kliknij zielony przycisk "Code" → "Download ZIP" na stronie repozytorium
+- **Git Clone**: `git clone https://github.com/TwojaNazwaUzytkownika/Roll.git`
+
+Po pobraniu rozpakuj archiwum ZIP i postępuj zgodnie z instrukcjami instalacji poniżej.
+
 ## Instalacja
 
 ### 1. Zainstaluj zależności
