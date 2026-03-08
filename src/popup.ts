@@ -296,6 +296,23 @@ async function sendToDiscord(
   }
 }
 
+// Toggle Discord button visibility based on auto-send checkbox
+function toggleDiscordButtonVisibility(): void {
+  const autoSendCheckbox = document.getElementById(
+    "autoSendDiscord",
+  ) as HTMLInputElement;
+  const sendDiscordButton = document.getElementById(
+    "sendToDiscord",
+  ) as HTMLButtonElement;
+
+  if (autoSendCheckbox && sendDiscordButton) {
+    // Hide button if auto-send is checked, show if unchecked
+    sendDiscordButton.style.display = autoSendCheckbox.checked
+      ? "none"
+      : "block";
+  }
+}
+
 // Event handlers
 function setupEventListeners(): void {
   const rollButton = document.getElementById("rollButton") as HTMLButtonElement;
@@ -434,6 +451,8 @@ function setupEventListeners(): void {
     if (autoSendCheckbox) {
       autoSendCheckbox.checked = config.autoSend;
     }
+    // Update button visibility after loading config
+    toggleDiscordButtonVisibility();
   });
 
   // Auto-save checkbox state when changed
@@ -445,6 +464,8 @@ function setupEventListeners(): void {
         config.userNick || "",
         autoSendCheckbox.checked,
       );
+      // Update button visibility when checkbox changes
+      toggleDiscordButtonVisibility();
     });
   }
 
