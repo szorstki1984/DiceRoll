@@ -124,7 +124,8 @@ function displayResults(results: RollResults): void {
   // Messy critical: has 10 on red dice AND there are critical pairs on white
   const messyCritical = hungerTens > 0 && pairsOfTens > 0;
 
-  const totalOnes = allDice.filter((v) => v === 1).length;
+  // Count only ones from hunger (red) dice
+  const totalOnes = hungerOnes;
 
   let summaryHTML = `
         <div class="summary-stats">
