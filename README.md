@@ -17,8 +17,8 @@ Rozszerzenie Chrome do rzucania dziesięciościennymi kośćmi (d10) z podziałe
 
 Możesz pobrać rozszerzenie w jednej z poniższych metod:
 
-- **ZIP z repozytorium**: [Pobierz ZIP](https://github.com/TwojaNazwaUzytkownika/Roll/archive/refs/heads/main.zip) lub kliknij zielony przycisk "Code" → "Download ZIP" na stronie repozytorium
-- **Git Clone**: `git clone https://github.com/TwojaNazwaUzytkownika/Roll.git`
+- **ZIP z repozytorium**: [Pobierz ZIP](https://github.com/szorstki1984/DiceRoll/archive/refs/heads/main.zip) lub kliknij zielony przycisk "Code" → "Download ZIP" na stronie repozytorium
+- **Git Clone**: `git clone https://github.com/szorstki1984/Roll.git`
 
 Po pobraniu rozpakuj archiwum ZIP i postępuj zgodnie z instrukcjami instalacji poniżej.
 
