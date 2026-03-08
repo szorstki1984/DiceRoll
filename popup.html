@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <div class="wrapper">
     <div class="container">
       <h1>🎲 D10 Dice Roller</h1>
 
@@ -49,6 +50,42 @@
       </div>
 
       <div id="summary" class="summary"></div>
+
+      <div class="discord-section">
+        <details class="discord-config">
+          <summary>⚙️ Konfiguracja Discord</summary>
+          <div class="discord-input-group">
+            <label for="userNick" class="label-text">Twój nick:</label>
+            <input
+              type="text"
+              id="userNick"
+              placeholder="Twój nick gracza..."
+            />
+
+            <label for="webhookUrl" class="label-text"
+              >Discord Webhook URL:</label
+            >
+            <input
+              type="text"
+              id="webhookUrl"
+              placeholder="https://discord.com/api/webhooks/..."
+            />
+
+            <div class="auto-send-checkbox">
+              <label>
+                <input type="checkbox" id="autoSendDiscord" />
+                <span>Wysyłaj automatycznie po rzucie</span>
+              </label>
+            </div>
+
+            <button id="saveWebhook" class="btn-save">Zapisz</button>
+          </div>
+        </details>
+
+        <button id="sendToDiscord" class="discord-button" disabled>
+          📤 Wyślij na Discord
+        </button>
+      </div>
     </div>
 
     <script type="module" src="dist/popup.js"></script>

@@ -4,7 +4,14 @@
   "version": "1.0.0",
   "description": "Roll d10 dice with normal (white) and hunger (red) dice pools",
   "action": {
-    "default_popup": "popup.html"
+    "default_title": "D10 Dice Roller"
   },
-  "permissions": []
+  "side_panel": {
+    "default_path": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["storage", "sidePanel"],
+  "host_permissions": ["https://discord.com/*"]
 }

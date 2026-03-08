@@ -9,7 +9,9 @@ Rozszerzenie Chrome do rzucania dziesięciościennymi kośćmi (d10) z podziałe
 - 🔴 Czerwone kości (głód)
 - 📊 Graficzne przedstawienie wyników
 - ✨ Animacje rzutów
-- 📈 Podsumowanie statystyk (sukcesy, krytyczne, porażki)
+- 📈 Podsumowanie statystyk (sukcesy, krytyczne zwycięstwa, bestialskie porażki)
+- 📤 **Integracja z Discord** - wysyłaj wyniki na kanał Discord przez webhook
+- 💾 Automatyczne zapisywanie konfiguracji Discord
 
 ## Instalacja
 
@@ -36,17 +38,39 @@ To skompiluje pliki TypeScript do JavaScript w folderze `dist/`.
 
 ## Użytkowanie
 
-1. Kliknij ikonę rozszerzenia w pasku narzędzi Chrome
-2. Wybierz liczbę białych kości (0-20)
-3. Wybierz liczbę czerwonych kości głodu (0-20)
-4. Kliknij **RZUĆ KOŚĆMI**
-5. Zobacz wyniki z podziałem na kości białe i czerwone
+1. Kliknij ikonę rozszerzenia w pasku narzędzi Chrome - otworzy się panel boczny
+2. Panel pozostanie otwarty nawet po kliknięciu poza nim
+3. Wybierz liczbę białych kości (0-20)
+4. Wybierz liczbę czerwonych kości głodu (0-20)
+5. Kliknij **RZUĆ KOŚĆMI**
+6. Zobacz wyniki z podziałem na kości białe i czerwone
+
+**Uwaga**: Rozszerzenie działa jako panel boczny Chrome i pozostaje widoczne dopóki go ręcznie nie zamkniesz.
 
 ### Interpretacja wyników
 
 - **Liczba od 6 do 9**: Sukces
 - **10**: Krytyczny sukces (wyróżniony zielonym dla białych kości, złotym dla czerwonych)
 - **1**: Krytyczna porażka (szare dla białych kości)
+
+## Integracja z Discord
+
+Rozszerzenie pozwala wysyłać wyniki rzutów bezpośrednio na kanał Discord przez webhook.
+
+### Konfiguracja
+
+1. Utwórz webhook na swoim kanale Discord (zobacz [DISCORD.md](DISCORD.md) dla szczegółowej instrukcji)
+2. Otwórz rozszerzenie i kliknij **⚙️ Konfiguracja Discord**
+3. Wklej URL webhooka
+4. Kliknij **Zapisz**
+
+### Wysyłanie wyników
+
+1. Wykonaj rzut kośćmi
+2. Kliknij **📤 Wyślij na Discord**
+3. Wyniki pojawią się na Twoim kanale Discord!
+
+📖 Szczegółowa instrukcja: [DISCORD.md](DISCORD.md)
 
 ## Rozwój
 

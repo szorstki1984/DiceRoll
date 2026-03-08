@@ -14,6 +14,18 @@ interface RollResults {
   hunger: number[];
 }
 
+interface RollSummary {
+  successes: number;
+  pairsOfTens: number;
+  messyCritical: boolean;
+  bestialFailure: boolean;
+  totalOnes: number;
+}
+
+// Global state
+let lastRollResults: RollResults | null = null;
+let lastRollSummary: RollSummary | null = null;
+
 // Dice rolling logic
 function rollD10(): number {
   return Math.floor(Math.random() * 10) + 1;
@@ -162,6 +174,125 @@ function displayResults(results: RollResults): void {
     `;
 
   summaryContainer.innerHTML = summaryHTML;
+
+  // Store last roll results for Discord sending
+  lastRollResults = results;
+  lastRollSummary = {
+    successes,
+    pairsOfTens,
+    messyCritical,
+    bestialFailure,
+    totalOnes,
+  };
+
+  // Enable Discord button if there are results
+  const discordButton = document.getElementById(
+    "sendToDiscord",
+  ) as HTMLButtonElement;
+  if (discordButton) {
+    discordButton.disabled = false;
+  }
+}
+
+// Discord integration functions
+async function saveDiscordConfig(
+  webhookUrl: string,
+  userNick: string,
+  autoSend: boolean,
+): Promise<void> {
+  return new Promise((resolve) => {
+    chrome.storage.local.set({ webhookUrl, userNick, autoSend }, () => {
+      resolve();
+    });
+  });
+}
+
+async function loadDiscordConfig(): Promise<{
+  webhookUrl: string | null;
+  userNick: string | null;
+  autoSend: boolean;
+}> {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(
+      ["webhookUrl", "userNick", "autoSend"],
+      (result) => {
+        resolve({
+          webhookUrl: result.webhookUrl || null,
+          userNick: result.userNick || null,
+          autoSend: result.autoSend || false,
+        });
+      },
+    );
+  });
+}
+
+function formatResultsForDiscord(userNick?: string): string {
+  if (!lastRollResults || !lastRollSummary) {
+    return "Brak wyników do wysłania.";
+  }
+
+  const { normal, hunger } = lastRollResults;
+  const { successes, pairsOfTens, messyCritical, bestialFailure, totalOnes } =
+    lastRollSummary;
+
+  let message = "**🎲 Rzut kośćmi D10**";
+
+  // Add user nick if provided
+  if (userNick && userNick.trim()) {
+    message += ` - **${userNick.trim()}**`;
+  }
+
+  message += "\n\n";
+
+  // Dice results
+  if (normal.length > 0) {
+    message += `**Białe kości (${normal.length}):** ${normal.join(", ")}\n`;
+  }
+  if (hunger.length > 0) {
+    message += `**Czerwone kości głodu (${hunger.length}):** ${hunger.join(", ")}\n`;
+  }
+
+  message += "\n**📊 Podsumowanie:**\n";
+  message += `Sukcesy: **${successes}**\n`;
+
+  if (pairsOfTens > 0) {
+    message += `Krytyczne zwycięstwo: **${pairsOfTens} ${pairsOfTens === 1 ? "para" : "pary"} 10**\n`;
+  }
+  if (messyCritical) {
+    message += `⚠️ **Krwawa wygrana**\n`;
+  }
+  if (bestialFailure) {
+    message += `💀 **Bestialska porażka**\n`;
+  }
+  if (totalOnes > 0) {
+    message += `Jedynki: ${totalOnes}\n`;
+  }
+
+  return message;
+}
+
+async function sendToDiscord(
+  webhookUrl: string,
+  userNick?: string,
+): Promise<boolean> {
+  const message = formatResultsForDiscord(userNick);
+
+  try {
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        content: message,
+      }),
+    });
+
+    return response.ok;
+  } catch (error) {
+    console.error("Error sending to Discord:", error);
+    return false;
+  }
 }
 
 // Event handlers
@@ -209,6 +340,29 @@ function setupEventListeners(): void {
     setTimeout(() => {
       rollButton.classList.remove("rolling");
     }, 500);
+
+    // Auto-send to Discord if checkbox is checked
+    const autoSendCheckbox = document.getElementById(
+      "autoSendDiscord",
+    ) as HTMLInputElement;
+    if (autoSendCheckbox && autoSendCheckbox.checked) {
+      // Delay slightly to ensure display is complete
+      setTimeout(async () => {
+        const webhookInput = document.getElementById(
+          "webhookUrl",
+        ) as HTMLInputElement;
+        const userNickInput = document.getElementById(
+          "userNick",
+        ) as HTMLInputElement;
+        const config = await loadDiscordConfig();
+        const webhookUrl = webhookInput?.value.trim() || config.webhookUrl;
+        const userNick = userNickInput?.value.trim() || config.userNick;
+
+        if (webhookUrl && lastRollResults) {
+          await sendToDiscord(webhookUrl, userNick || undefined);
+        }
+      }, 600);
+    }
   });
 
   // Counter button handlers
@@ -250,6 +404,94 @@ function setupEventListeners(): void {
   hungerDiceInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
       rollButton.click();
+    }
+  });
+
+  // Discord integration handlers
+  const webhookInput = document.getElementById(
+    "webhookUrl",
+  ) as HTMLInputElement;
+  const userNickInput = document.getElementById("userNick") as HTMLInputElement;
+  const autoSendCheckbox = document.getElementById(
+    "autoSendDiscord",
+  ) as HTMLInputElement;
+  const saveWebhookButton = document.getElementById(
+    "saveWebhook",
+  ) as HTMLButtonElement;
+  const sendDiscordButton = document.getElementById(
+    "sendToDiscord",
+  ) as HTMLButtonElement;
+
+  // Load saved Discord config
+  loadDiscordConfig().then((config) => {
+    if (config.webhookUrl && webhookInput) {
+      webhookInput.value = config.webhookUrl;
+    }
+    if (config.userNick && userNickInput) {
+      userNickInput.value = config.userNick;
+    }
+    if (autoSendCheckbox) {
+      autoSendCheckbox.checked = config.autoSend;
+    }
+  });
+
+  // Auto-save checkbox state when changed
+  if (autoSendCheckbox) {
+    autoSendCheckbox.addEventListener("change", async () => {
+      const config = await loadDiscordConfig();
+      await saveDiscordConfig(
+        config.webhookUrl || "",
+        config.userNick || "",
+        autoSendCheckbox.checked,
+      );
+    });
+  }
+
+  // Save Discord config
+  saveWebhookButton.addEventListener("click", async () => {
+    const url = webhookInput.value.trim();
+    const nick = userNickInput.value.trim();
+    const autoSend = autoSendCheckbox ? autoSendCheckbox.checked : false;
+
+    if (url || nick) {
+      await saveDiscordConfig(url, nick, autoSend);
+      alert("Konfiguracja zapisana!");
+    } else {
+      alert("Wprowadź webhook URL lub nick!");
+    }
+  });
+
+  // Send to Discord
+  sendDiscordButton.addEventListener("click", async () => {
+    const config = await loadDiscordConfig();
+    const webhookUrl = webhookInput.value.trim() || config.webhookUrl;
+    const userNick = userNickInput.value.trim() || config.userNick;
+
+    if (!webhookUrl) {
+      alert("Najpierw skonfiguruj Discord Webhook URL!");
+      return;
+    }
+
+    if (!lastRollResults) {
+      alert("Brak wyników do wysłania. Najpierw wykonaj rzut!");
+      return;
+    }
+
+    sendDiscordButton.disabled = true;
+    sendDiscordButton.textContent = "Wysyłanie...";
+
+    const success = await sendToDiscord(webhookUrl, userNick || undefined);
+
+    if (success) {
+      sendDiscordButton.textContent = "✓ Wysłano!";
+      setTimeout(() => {
+        sendDiscordButton.textContent = "📤 Wyślij na Discord";
+        sendDiscordButton.disabled = false;
+      }, 2000);
+    } else {
+      alert("Błąd wysyłania na Discord. Sprawdź URL webhooka.");
+      sendDiscordButton.textContent = "📤 Wyślij na Discord";
+      sendDiscordButton.disabled = false;
     }
   });
 }
