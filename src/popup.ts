@@ -464,8 +464,6 @@ function setupEventListeners(): void {
         config.userNick || "",
         autoSendCheckbox.checked,
       );
-      // Update button visibility when checkbox changes
-      toggleDiscordButtonVisibility();
     });
   }
 
